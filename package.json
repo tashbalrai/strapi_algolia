@@ -1,10 +1,10 @@
 {
-  "name": "search",
-  "version": "0.0.0",
+  "name": "strapi-algolia-search",
+  "version": "1.0.0",
   "description": "This is a Strapi algolia search plugin.",
   "strapi": {
     "name": "search",
-    "description": "Algolia search plugin developed.",
+    "description": "Algolia search plugin.",
     "kind": "plugin",
     "displayName": "Search"
   },
@@ -28,11 +28,11 @@
     "styled-components": "^5.3.6"
   },
   "author": {
-    "name": "A Strapi developer"
+    "name": "Vipan Balrai"
   },
   "maintainers": [
     {
-      "name": "A Strapi developer"
+      "name": "Vipan Balrai"
     }
   ],
   "engines": {
