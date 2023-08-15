@@ -24,7 +24,8 @@ module.exports = ({ strapi }) => ({
     this.config = strapi.config.get("plugin.search");
 
     if (!this.config.applicationId.length || !this.config.apiKey.length) {
-      throw new Error("Algolia search application ID and Key must be defined.");
+      console.log("Algolia search application ID and Key must be defined.");
+      return;
     }
   },
   index(event) {
@@ -42,13 +43,10 @@ module.exports = ({ strapi }) => ({
           Object.keys(settings).length
         ) {
           if (!helper.validateAlgoliaSettings(settings)) {
-            throw new ApplicationError(
-              "Algolia search settings are not valid.",
-              {
-                model: event.model.uid,
-                settings,
-              }
+            console.log(
+              `Algolia search settings are not valid. Model name: ${event.model.uid}, Settings: ${settings}`
             );
+            return;
           }
 
           index.setSettings(settings).catch((e) => console.error(e));

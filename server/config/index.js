@@ -40,7 +40,7 @@ module.exports = {
         })
         .validateSync(config);
     } catch (error) {
-      throw new Error(`Search plugin config error: ${error.errors}`);
+      console.log(`Search plugin config error: ${error.errors}`);
     }
   },
 };
