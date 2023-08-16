@@ -1,5 +1,6 @@
 "use strict";
 const { helper } = require("./util");
+const util = require("util");
 
 module.exports = ({ strapi }) => {
   const algolia = strapi.plugin("search").service("algolia");
@@ -14,7 +15,12 @@ module.exports = ({ strapi }) => {
 
     if (algolia.config?.contentTypes?.[event.model.uid]) {
       const many = event.action.toLowerCase().includes("many");
-      let filter = { where: event.params.where };
+      const modelConfig = algolia.config?.contentTypes?.[event.model.uid];
+      const filter = { where: event.params.where };
+
+      if (modelConfig?.populate && Object.keys(modelConfig.populate).length) {
+        filter.populate = modelConfig.populate;
+      }
 
       const result = await strapi.db
         .query(event.model.uid)

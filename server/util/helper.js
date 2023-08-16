@@ -3,6 +3,60 @@
 const util = require("util");
 const { SETTINGS_KEYS } = require("../config/algolia");
 
+const selectFields = (data, fieldsToSelect) => {
+  if (typeof data != "object") {
+    return;
+  }
+  const isArray = Array.isArray(data);
+
+  if (!isArray && !Object.keys(data).length) {
+    return;
+  }
+
+  if (isArray) {
+    const values = [];
+    for (const item of data) {
+      let value = selectFields(item, fieldsToSelect);
+      if (Object.keys(value).length) {
+        values.push(value);
+      }
+    }
+    return values;
+  }
+  const res = {};
+  for (let field of fieldsToSelect) {
+    let value = null;
+    if (field.includes(".")) {
+      let parts = field.split(".");
+      if (undefined == data[parts[0]]) continue;
+
+      field = parts[0];
+      value = selectFields(data[parts[0]], [
+        parts.shift().length > 1 ? parts.join(".") : parts[0],
+      ]);
+    }
+
+    if (null === value && data[field]) {
+      value = data[field];
+    }
+
+    if (!value || !Object.keys(value).length) continue;
+
+    if (!res[field]) {
+      res[field] = value;
+      continue;
+    }
+
+    const curValue = res[field];
+    if (!Array.isArray(curValue)) {
+      curValue = [curValue];
+    }
+    curValue.push(value);
+    res[field] = curValue.flat();
+  }
+  return res;
+};
+
 module.exports = {
   validateAlgoliaSettings: (settings) => {
     const keys = Object.keys(settings);
@@ -23,27 +77,13 @@ module.exports = {
     }
 
     for (const item of event.state.data) {
-      const record = Object.fromEntries(
-        Object.entries(item).filter(([field, data]) => {
-          if (
-            Array.isArray(fields) &&
-            fields.length &&
-            !fields.includes(field)
-          ) {
-            return false;
-          }
-          if (
-            Array.isArray(excludedFields) &&
-            excludedFields.length &&
-            excludedFields.includes(field)
-          ) {
-            return false;
-          }
+      const record = selectFields(item, fields);
 
-          return true;
-        })
-      );
-      record.objectID = item.id;
+      if (!record) {
+        continue;
+      }
+
+      record["objectID"] = item.id;
       records.push(record);
     }
 

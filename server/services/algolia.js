@@ -58,6 +58,7 @@ module.exports = ({ strapi }) => ({
   doIndex(index, event) {
     const action = event.action.toLowerCase();
     const modelConfig = this.config.contentTypes[event.model.uid];
+    helper.getDataToIndex(event, modelConfig);
     if (action.includes("delete")) {
       index
         .deleteObjects(helper.getDataToDelete(event, modelConfig))
