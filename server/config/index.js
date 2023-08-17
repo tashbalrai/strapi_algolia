@@ -22,17 +22,7 @@ module.exports = {
                 indexName: yup.string().required(),
                 fields: yup.array().of(yup.string().required()),
                 excludedFields: yup.array().of(yup.string().required()),
-                settings: yup.object().shape({
-                  searchableAttributes: yup.array().of(yup.string().required()),
-                  attributesForFacting: yup.array().of(yup.string().required()),
-                  unretrievableAttributes: yup
-                    .array()
-                    .of(yup.string().required()),
-                  attributesToRetrieve: yup.array().of(yup.string().required()),
-                  restrictSearchableAttributes: yup
-                    .array()
-                    .of(yup.string().required()),
-                }),
+                settings: yup.object(),
               });
             }
             return yup.object(shape);

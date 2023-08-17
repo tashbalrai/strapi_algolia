@@ -44,7 +44,8 @@ module.exports = ({ strapi }) => ({
         ) {
           if (!helper.validateAlgoliaSettings(settings)) {
             console.log(
-              `Algolia search settings are not valid. Model name: ${event.model.uid}, Settings: ${settings}`
+              `Algolia search settings are not valid. Model name: ${event.model.uid}, Settings: `,
+              settings
             );
             return;
           }
