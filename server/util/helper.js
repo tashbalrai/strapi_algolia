@@ -47,7 +47,7 @@ const selectFields = (data, fieldsToSelect) => {
       continue;
     }
 
-    const curValue = res[field];
+    let curValue = res[field];
     if (!Array.isArray(curValue)) {
       curValue = [curValue];
     }
